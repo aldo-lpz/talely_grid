@@ -8,9 +8,39 @@
 	</head>
 	<body>
 
+		<div id="grid_holder"></div>
 
-		<script src="libs/jquery.min.js" type="text/javascript" charset="utf-8" async defer></script>
-		<script src="libs/jquery-ui-1.10.2.min.js" type="text/javascript" charset="utf-8" async defer></script>
-		<script src="src/ui.grid.js" type="text/javascript" charset="utf-8" async defer></script>
+		<script src="libs/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="libs/jquery-ui-1.10.2.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="src/ui.grid.js" type="text/javascript" charset="utf-8"></script>
+		<script src="localdata.js" type="text/javascript" charset="utf-8"></script>
+		
+		<script type="text/javascript" charset="utf-8">
+
+		$(document).ready(function() {
+
+			$("#grid_holder").grid({
+				sortable : false,
+				list     : localdata,
+				headers  : ["firstname", "lastname", "status"],
+				columns  : [
+					{
+						name : "firstname",
+						type : "input"
+					},
+					{
+						name : "lastname",
+						type : "input"
+					},
+					{
+						name : "status",
+						type : "checkbox"
+					}
+				]
+			});
+
+		});
+
+		</script>
 	</body>
 </html>
