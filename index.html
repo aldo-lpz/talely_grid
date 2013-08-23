@@ -4,6 +4,7 @@
 			<meta http-equiv="X-UA-Compatible" content="IE=edge">
 			<title>grid</title>
 			<link rel="stylesheet" href="libs/smoothness/jquery-ui.min.css">
+			<link rel="stylesheet" href="libs/font-awesome/css/font-awesome.css">
 			<link rel="stylesheet" href="src/style.css">
 	</head>
 	<body>
@@ -22,8 +23,11 @@
 			$("#grid_holder").grid({
 				sortable : false,
 				list     : localdata,
-				headers  : ["firstname", "lastname", "status"],
+				headers  : ["", "firstname", "lastname", "status", ""],
 				columns  : [
+					{
+						type : "reorder"
+					},
 					{
 						name : "firstname",
 						type : "input"
@@ -35,6 +39,9 @@
 					{
 						name : "status",
 						type : "checkbox"
+					},
+					{
+						type : "delete"
 					}
 				]
 			});
