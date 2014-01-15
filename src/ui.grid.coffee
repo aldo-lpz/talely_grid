@@ -32,7 +32,7 @@ $.widget "talely.grid",
 
 		if @options.sortable
 			@_content.sortable
-				handle : ".icon-reorder"
+				handle : ".fa-bars"
 				update : (event, ui) =>
 					ref.options.list = ref._reorder_array()
 
@@ -61,6 +61,9 @@ $.widget "talely.grid",
 
 			new_order.push ref.options.list[old]
 			row.attr "tg-row-index", i
+
+			$('td', row).each (j, col) ->
+				$(col).attr "tg-row-index", i
 
 		new_order
 
@@ -100,14 +103,12 @@ $.widget "talely.grid",
 
 		switch col.type
 			when "reorder"
-				c.append "<i class='icon-reorder'></i>"
+				c.append "<i class='fa fa-bars'></i>"
 			when "input"
 				c.append @_add_input_column index, col.name, row[col.name]
 			when "checkbox"
 				c.append @_add_checkbox_column index, col.name, row[col.name]
 				c.css("text-align", "center")
-			when "controls"
-				c.append @_add_controls_column index, col.name, row[col.name]
 			when "select"
 				c.append @_add_select_column index, col.name, row[col.name]
 			when "goto"
@@ -163,11 +164,14 @@ $.widget "talely.grid",
 
 	_add_delete_column : (index) ->
 		ref  = @		
-		icon = $("<i></i>").addClass("icon-trash")
+		icon = $("<i></i>").addClass("fa fa-trash-o")
 		icon.bind "click", (event) ->
 			if confirm "Delete?"
 				ref.options.list.splice index, 1
 				$("tr[tg-row-index=#{index}]", ref.element).remove()
+
+				ref.options.list = ref._reorder_array()
+				
 				ref._trigger "row_removed", null,
 					row   : index
 
@@ -200,7 +204,7 @@ $.widget "talely.grid",
 
 	_add_goto_column : (index) ->
 		ref  = @		
-		icon = $("<i></i>").addClass("icon-search")
+		icon = $("<i></i>").addClass("fa fa-search")
 		icon.bind "click", (event) ->
 			ref._trigger "goto_clicked", null,
 				row   : ref.options.list[index]
@@ -212,7 +216,7 @@ $.widget "talely.grid",
 
 	_add_object_column : (index, name) ->
 		ref  = @
-		icon = $("<i></i>").addClass("icon-expand-alt")
+		icon = $("<i></i>").addClass("fa fa-plus")
 		icon.bind "click", (event) ->
 			ref._trigger "object_clicked", null,
 				obj   : ref.options.list[index][name]
@@ -222,33 +226,6 @@ $.widget "talely.grid",
 			event.stopPropagation()
 
 		return icon
-
-
-	_add_controls_column : (index, name, value) ->
-		ref = @
-
-		select = $ document.createElement('select')
-
-		for control in EAD.external.dev_tools.controls
-			state = if value.type is control.val then "selected='selected'" else ""
-			select.append "<option value='#{control.val}' #{state}>#{control.name}</option>"
-
-		select.bind "change", (event) ->
-
-			selected = $(@).val()
-			control  = _.find EAD.external.dev_tools.controls, (curr) -> 
-				return curr.val is selected
-
-			ref.options.list[index][name] = control.default_value_control
-			
-			ref._trigger "cell_changed", null, 
-				value : control
-				cell  : name
-				row   : index
-
-			event.stopPropagation()
-		
-		return select
 
 
 	add_row : (obj) ->
